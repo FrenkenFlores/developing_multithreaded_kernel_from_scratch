@@ -3,7 +3,7 @@ BITS 16 ; Define that the assembler will use 16 bytes.
 
 start:
     ; calling BIOS routine (http://www.ctyme.com/intr/rb-0106.htm).
-    mov ah, 0eh ; 0eh is the command.
+    mov ah, 0eh ; 0eh is the command that will print char from al register.
     mov al, 'A' ; The character to write.
     mov bx, 0
     int 0x10 ; Call interrupt (video - teletype output).
