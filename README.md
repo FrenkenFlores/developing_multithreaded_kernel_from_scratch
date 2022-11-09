@@ -11,3 +11,5 @@
 - [x86 memory segmentation, wiki](https://en.wikipedia.org/wiki/X86_memory_segmentation)
 - [MrBrownCS channel](https://www.youtube.com/c/ComputerScienceTutor)
 - [Address, Data and Control Buses](https://www.youtube.com/watch?v=3osm-soT_Lc)
+- [Interrupt descriptor table](https://en.wikipedia.org/wiki/Interrupt_descriptor_table)
+- [Exceptions, OSDEV](https://wiki.osdev.org/Exceptions)

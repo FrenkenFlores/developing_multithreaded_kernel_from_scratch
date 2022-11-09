@@ -42,10 +42,25 @@ start:
     mov ss, ax
     mov sp, 0x7c00
     sti ; Enable interrupts
-    mov si, msg ; Save the address of msg label to Source index.
+    ; http://www.ctyme.com/intr/rb-0607.htm
+    mov ah, 0x2 ; Read sector command.
+    mov al, 2 ; Read two sectors.
+    mov ch, 0
+    mov cl, 1 ; Starts from one (C:0,S:1,H:0).
+    mov dh, 0
+    ; dl will be set by default, it will have the drive number that it loaded from.
+    mov bx, buffer ; es is elready set above.
+    int 0x13; Read.
+    jc error; If the carry was set by int 0x13, then jump to error.
+    ; Write the message from the buffer that will be filled with data after int 0x13.
+    mov si, buffer
     call print
-    jmp $ ; infinite loop, jump to it self.
+    jmp $ ; Infinite loop, jump to it self.
 
+error:
+    mov si, error_msg
+    call print
+    jmp $
 
 print:
     mov bx, 0
@@ -53,7 +68,7 @@ print:
 ; lable_name.local_lable, like print.done, etc.
 .loop:
     ; (http://www.jaist.ac.jp/iscenter-new/mpc/altix/altixdata/opt/intel/vtune/doc/users_guide/mergedProjects/analyzer_ec/mergedProjects/reference_olh/mergedProjects/instructions/instruct32_hh/vc161.htm)
-    lodsb ; Load one string byte from the place where si is pointing to in al register.
+    lodsb ; Load one string byte from the place where si is pointing to in al register and increment si.
     cmp al, 0
     je .done
     call print_char
@@ -61,14 +76,12 @@ print:
 .done:
     ret
 
-
 print_char:
     mov ah, 0eh ; choose 0eh command that will print char from al register.
     int 0x10 ; call interrupt.
     ret
 
-
-msg: db 'Hello, World!', 0 ; write msg and terminate by 0 at this address.
+error_msg: db 'Failed to load sector', 0
 
 times 510 - ($ - $$) db 0   ; Fill at least 510 bytes of data.
 ; $ points to current line, $$ points to the begining of the section,
@@ -85,3 +98,8 @@ dw 0xAA55 ; Add the boot signature. It should be 0x55AA, but Intel are little en
 
 ; Check the binary file by executing: ndisasm ./boot.bin
 ; Run the bootloader by executing: qemu-system-x86_64 -hda ./boot.bin
+
+; The code after the boot signature will be never read, but we can reference it in
+; the first sector.
+; We create a new empty label that we will write to.
+buffer:

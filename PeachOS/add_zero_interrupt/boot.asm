@@ -28,6 +28,23 @@ main:
     ; it is used as a reference to access the physical memory location by CPU.
     jmp 0x7c0:start
 
+; Create a Division by zero interrupt. We will overwrite the adderss of the
+; zero handler in the IVT by the address of our intterrupt. Call int 0.
+; By default the int 0 is an exception that gets called when we deivde by zero:
+; mov ax, 0x00
+; div ax
+handle_zero:
+    mov ah, 0eh
+    mov al, '0'
+    ; Print 0.
+    int 0x10
+
+handle_one:
+    mov ah, 0eh
+    mov al, '1'
+    ; Print 1
+    int 0x10
+
 start:
     ; Different CPU can initialize registers differently, there is no garentee that
     ; they will be set correctly, that is why its important to init them by ourselves.
@@ -42,6 +59,31 @@ start:
     mov ss, ax
     mov sp, 0x7c00
     sti ; Enable interrupts
+    ; Handle int 0.
+    ; Overwrite the Interrupt Vector Table (IVT).
+    ; every vector (element) in the IVT consists of OFFSET (4 bytes, 16 bit): SEGMENT (4 bytes, 16 bit).
+    ; Move 16 bit hex representation of handle_zero to the stack (RAM) address 0x00 which will be the offset.
+    ; Note, by adding ss:0xNN we specify the stack segment, ds:0xNN - data segment, etc.
+    ; Note, mov word[...], n - moves the 16-bit hex representation of n to [...].
+    mov word[ss:0x00], handle_zero
+    ; Move the logical address of the segment that the BIOS will start bootloader from.
+    ; 0x7c00 is the physical address that the bootloader gets loaded from, 0x7c00 / 0x10 = 0x7c0
+    ; is the logical address that reference that physical address.
+    ; The physical address of the handler will be addressed by 0x7c0:hex_representation_of_handle_zero pair.
+    mov word[ss:0x02], 0x7c0
+
+    ; Handle int 1.
+    mov word[ss:0x04], handle_one
+    mov word[ss:0x06], 0x7c0
+
+    ; Call interrupt 0.
+    mov ax, 0x00
+    div ax
+    ; Or use:
+    int 0
+    ; Call interrupt 1.
+    int 1
+
     mov si, msg ; Save the address of msg label to Source index.
     call print
     jmp $ ; infinite loop, jump to it self.
