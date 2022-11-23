@@ -13,3 +13,8 @@
 - [Address, Data and Control Buses](https://www.youtube.com/watch?v=3osm-soT_Lc)
 - [Interrupt descriptor table](https://en.wikipedia.org/wiki/Interrupt_descriptor_table)
 - [Exceptions, OSDEV](https://wiki.osdev.org/Exceptions)
+- [Kernel Development From Scratch!](https://youtube.com/playlist?list=PLrGN1Qi7t67V-9uXzj4VSQCffntfvn42v)
+- [Making an OS (x86)](https://youtube.com/playlist?list=PLm3B56ql_akNcvH8vvJRYOc7TbYhRs19M)
+- [Building an OS](https://youtube.com/playlist?list=PLFjM7v6KGMpiH2G-kT781ByCNC_0pKpPN)
+- [x86 Assembly](https://youtube.com/playlist?list=PL0fxbw07Gos3AogW69p1n1gIDHaOazxL9)
+- [William Stallings - Operating Systems](https://drive.google.com/file/d/1YIEsdzYBbvPihGq5MNRLTR2aQRWKDHdQ/view?usp=sharing)
