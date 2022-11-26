@@ -17,4 +17,7 @@
 - [Making an OS (x86)](https://youtube.com/playlist?list=PLm3B56ql_akNcvH8vvJRYOc7TbYhRs19M)
 - [Building an OS](https://youtube.com/playlist?list=PLFjM7v6KGMpiH2G-kT781ByCNC_0pKpPN)
 - [x86 Assembly](https://youtube.com/playlist?list=PL0fxbw07Gos3AogW69p1n1gIDHaOazxL9)
+- [Writing a Bootloader Part 1](http://3zanders.co.uk/2017/10/13/writing-a-bootloader/)
+- [Writing a Bootloader Part 2](http://3zanders.co.uk/2017/10/16/writing-a-bootloader2/)
+- [Writing a Bootloader Part 3](http://3zanders.co.uk/2017/10/18/writing-a-bootloader3/)
 - [William Stallings - Operating Systems](https://drive.google.com/file/d/1YIEsdzYBbvPihGq5MNRLTR2aQRWKDHdQ/view?usp=sharing)
