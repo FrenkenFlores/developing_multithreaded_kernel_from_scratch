@@ -1,4 +1,4 @@
-# developing multithreaded kernel from scratch
+# Developing multithreaded kernel from scratch
 
 ## Resources
 - [i8086 and DOS interrupts](http://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_and_DOS_interrupts.pdf)
@@ -25,3 +25,7 @@
 - [NASM](https://nasm.us/doc/)
 - [ARM Assembly language tool](https://www.ti.com/lit/ug/spnu118y/spnu118y.pdf?ts=1670057751050&ref_url=https%253A%252F%252Fdownloads.ti.com%252F)
 - [DEV, writing my own bootloader, Frank Rosner](https://dev.to/frosnerd/writing-my-own-boot-loader-3mld)
+- [GCC Cross-Compiler](https://wiki.osdev.org/GCC_Cross-Compiler)
+- [Bare metal embedded lecture-4: Writing linker scripts and section placement](https://www.youtube.com/watch?v=B7oKdUvRhQQ)
+- [GNU Linker, LD](https://wiki.osdev.org/LD)
+- [Linker Scripts](https://wiki.osdev.org/Linker_Scripts)
