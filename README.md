@@ -21,3 +21,7 @@
 - [Writing a Bootloader Part 2](http://3zanders.co.uk/2017/10/16/writing-a-bootloader2/)
 - [Writing a Bootloader Part 3](http://3zanders.co.uk/2017/10/18/writing-a-bootloader3/)
 - [William Stallings - Operating Systems](https://drive.google.com/file/d/1YIEsdzYBbvPihGq5MNRLTR2aQRWKDHdQ/view?usp=sharing)
+- [Makefile](https://www.gnu.org/software/make/manual/make.html)
+- [NASM](https://nasm.us/doc/)
+- [ARM Assembly language tool](https://www.ti.com/lit/ug/spnu118y/spnu118y.pdf?ts=1670057751050&ref_url=https%253A%252F%252Fdownloads.ti.com%252F)
+- [DEV, writing my own bootloader, Frank Rosner](https://dev.to/frosnerd/writing-my-own-boot-loader-3mld)
