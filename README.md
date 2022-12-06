@@ -29,3 +29,6 @@
 - [Bare metal embedded lecture-4: Writing linker scripts and section placement](https://www.youtube.com/watch?v=B7oKdUvRhQQ)
 - [GNU Linker, LD](https://wiki.osdev.org/LD)
 - [Linker Scripts](https://wiki.osdev.org/Linker_Scripts)
+- [GNU ld manual](https://sourceware.org/binutils/docs/ld/)
+- [Parallel ATA](https://en.wikipedia.org/wiki/Parallel_ATA)
+- [ATA PIO MODE](https://wiki.osdev.org/ATA_PIO_Mode)
