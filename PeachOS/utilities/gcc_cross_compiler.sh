@@ -5,9 +5,16 @@
 
 CURRENT_PATH="$(realpath $(dirname ${BASH_SOURCE[0]}))"
 
-export PREFIX="${CURRENT_PATH}/cross"
-export TARGET=i686-elf
-export PATH="${PREFIX}/bin:${PATH}"
+ENV_VARS=("export PREFIX=${CURRENT_PATH}/cross")
+ENV_VARS+=("export TARGET=i686-elf")
+ENV_VARS+=("export PATH=${CURRENT_PATH}/cross/bin:\${PATH}")
+
+for e in "${ENV_VARS[@]}"; do
+    eval "${e}"
+    if ! grep -q "${e}" ~/.bashrc; then
+        echo "${e}" >> ~/.bashrc
+    fi
+done
 
 # Check if the GCC-Cross compiler already installed. Exit if it is.
 if ! ${TARGET}-gcc --version || ! ${TARGET}-ld --version ; then
@@ -78,3 +85,4 @@ if ! ${TARGET}-gcc --version || ! ${TARGET}-ld --version ; then
     fi
     cd ${CURRENT_PATH}
 fi
+exec bash

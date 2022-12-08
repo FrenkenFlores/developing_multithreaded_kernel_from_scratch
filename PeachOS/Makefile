@@ -10,7 +10,7 @@ all: ${BIN}/boot.bin ${BIN}/kernel.bin
 	dd if=${BIN}/kernel.bin >> ${BIN}/os.bin
 	dd if=/dev/zero bs=512 count=100 >> ${BIN}/os.bin
 
-${BIN}/kernel.bin: ${BUILD}/kernel.o gcc_init
+${BIN}/kernel.bin:  ${BUILD}/kernel.o
 	# Link all object files together in one file.
 	${TARGET}-ld -g -relocatable ${BUILD}/kernel.o -o ${BUILD}/kernelfull.o
 	# Take the object file and create an executable binary file.
@@ -25,10 +25,9 @@ ${BUILD}/kernel.o: ${SRC}/kernel.asm
 ${BIN}/boot.bin: ${SRC}/boot.asm
 	nasm -i ${SRC}/ -f bin ${SRC}/boot.asm -g -o ${BIN}/boot.bin
 
-
 # This command will install GCC-Cross compiler.
 # If it's already installed then it will add tools path to PATH
-# environment variable.
+# environment variable. Execute this command before excuting make.
 gcc_init:
 	source ${UTILITIES}/gcc_cross_compiler.sh
 test:

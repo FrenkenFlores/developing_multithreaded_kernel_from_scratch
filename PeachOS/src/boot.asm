@@ -15,6 +15,8 @@ times 33 db 0
 
 %include "./gdt.asm"
 
+
+global _start
 ; _start is default entry point name that the GNU ld uses.
 _start:
 .init_interrupts:
@@ -153,6 +155,8 @@ ata_lba_read:
 	loop .next_sector
 	; Return from the routine.
 	ret
+; Fill the rest of the sector with zeros.
 times 510 - ( $ - $$ ) db 0
+; Put the boot sector end signature.
 db 0x55
 db 0xAA

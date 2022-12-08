@@ -3,6 +3,10 @@ BITS 32
 ; Import the data segment.
 EXTERN DATA_SEG
 
+; The kernel should be compiled before the C code, even if its assembler.
+section .text
+
+global _start
 ; Protected mode (32-bit mode).
 ; _start is default entry point name that the GNU ld uses.
 _start:
@@ -25,3 +29,5 @@ _start:
 	out 0x92, al; Write to CPU bus.
 
 	jmp $
+; Fill the rest of the sector with zeros.
+times 512 - ( $ - $$ ) db 0
