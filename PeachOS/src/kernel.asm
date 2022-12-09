@@ -1,12 +1,11 @@
 BITS 32
 
-; Import the data segment.
-EXTERN DATA_SEG
-
-; The kernel should be compiled before the C code, even if its assembler.
-section .text
+CODE_SEG equ 0x08
+DATA_SEG equ 0x10
 
 global _start
+; The kernel_main funtion will be defined in kernel.c file.
+extern kernel_main
 ; Protected mode (32-bit mode).
 ; _start is default entry point name that the GNU ld uses.
 _start:
@@ -28,6 +27,7 @@ _start:
 	mov al, 2; Enable A20.
 	out 0x92, al; Write to CPU bus.
 
+	call kernel_main
 	jmp $
 ; Fill the rest of the sector with zeros.
 times 512 - ( $ - $$ ) db 0

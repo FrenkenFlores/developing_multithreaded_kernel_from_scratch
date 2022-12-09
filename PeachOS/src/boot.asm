@@ -3,6 +3,10 @@ BITS 16
 ; The CPU will load the bootloader from the 0x7c0 address.
 ; That's why our bootloader should start from this address.
 ORG 0x7c00
+
+CODE_SEG equ gdt_code_segment_discriptor - gdt_start
+DATA_SEG equ gdt_data_segment_discriptor - gdt_start
+
 ; Set the BIOS parameter block that takes the first 36 bytes.
 ; This block holds information about the hard drive, the BIOS
 ; do read/write operations on this block, this may harm our code
@@ -13,10 +17,6 @@ init:
 ; Add zeros to the last 33 bytes.
 times 33 db 0
 
-%include "./gdt.asm"
-
-
-global _start
 ; _start is default entry point name that the GNU ld uses.
 _start:
 .init_interrupts:
@@ -36,11 +36,13 @@ _start:
 	lgdt [gdt_descriptor]; Load GDT register with start address of Global Descriptor Table.
 	mov eax, cr0; Copy value from the control register cr0 register to the general eax register
 	; to execute the OR logical operation.
-	or al, 0x1; Set PE (Protection Enable) bit in CR0 (Control Register 0).
+	or eax, 0x1; Set PE (Protection Enable) bit in CR0 (Control Register 0).
 	mov cr0, eax; Give the cr0 register the return value.
 	; Perform far jump to selector 10h (offset into GDT, pointing at a 32bit PM code segment descriptor) 
 	; to load CS with proper PM32 descriptor)
 	jmp CODE_SEG:protected_mode32
+
+%include "gdt.asm"
 
 BITS 32
 protected_mode32:
@@ -49,12 +51,11 @@ protected_mode32:
 	; The total amount of sectors we will load.
 	mov ecx, 100
 	; The memory address where we will load it (1M = 1024 * 1024 = 100000h)
-	mov edi, 100000h
+	mov edi, 0x100000
 	; Call the driver that will load sectors including the kernel.
 	call ata_lba_read
 	; Jump to the location where we loaded our kernel.
 	jmp CODE_SEG:0x100000
-
 
 
 ; To use the IDENTIFY command, select a target drive by sending 0xA0
@@ -93,7 +94,6 @@ ata_lba_read:
 	; Send the sectorcount to port 0x1F2: outb(0x1F2, (unsigned char) count)
 	mov dx, 0x1F2
 	mov eax, ecx
-	shr eax, 24
 	; Send the total sectors to read.
 	out dx, al
 

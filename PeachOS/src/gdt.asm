@@ -1,9 +1,3 @@
-CODE_SEG equ gdt_code_segment_discriptor - gdt_start
-DATA_SEG equ gdt_data_segment_discriptor - gdt_start
-
-; Export the DATA_SEG variable to be able to use it from another asm files.
-global DATA_SEG
-
 ; The BIOS in protected mode use Global Discriptor Tables to
 ; access memory. Memory gets defined by segment discriptors
 ; which are a part from the GDT. Our GDT will have a simple structure:
@@ -22,6 +16,19 @@ gdt_null_segment_discriptor:
 	dd 0x00
 	dd 0x00
 
+; The code and data segment discriptors will be the same.
+; CS should be pointing at this label.
+gdt_code_segment_discriptor:; 0x08 offset
+	dw 0xFFFF; [0:15]
+	; Base 16 bit.
+	dw 0x00; [16:31]
+	; Base 8 bit.
+	db 0x00; [32:39]
+	; Access byte. E (Exicutable bit) for data segment is 1.
+	db 10011010b; [40:47]
+	db 11001111b; flags (4 bits) + segment length, bits 16-19, [48:55]
+	db 0x0       ; segment base, bits 24-31, [56:63]
+
 ; DS, SS, ES, FS, GS should be pointing at this label.
 gdt_data_segment_discriptor:; 0x10 offset.
 	; A 20-bit value, tells the maximum addressable unit, either in 1 byte units,
@@ -34,19 +41,6 @@ gdt_data_segment_discriptor:; 0x10 offset.
 	db 0x00; [32:39]
 	; Access byte. E (Exicutable bit) for data segment is 0.
 	db 10010010b; [40:47]
-	db 11001111b; flags (4 bits) + segment length, bits 16-19, [48:55]
-	db 0x0       ; segment base, bits 24-31, [56:63]
-
-; The code and data segment discriptors will be the same.
-; CS should be pointing at this label.
-gdt_code_segment_discriptor:; 0x08 offset
-	dw 0xFFFF; [0:15]
-	; Base 16 bit.
-	dw 0x00; [16:31]
-	; Base 8 bit.
-	db 0x00; [32:39]
-	; Access byte. E (Exicutable bit) for data segment is 1.
-	db 10011010b; [40:47]
 	db 11001111b; flags (4 bits) + segment length, bits 16-19, [48:55]
 	db 0x0       ; segment base, bits 24-31, [56:63]
 

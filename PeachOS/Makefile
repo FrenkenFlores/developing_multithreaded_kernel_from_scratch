@@ -3,6 +3,7 @@ UTILITIES = ${PWD}/utilities
 BIN = ${PWD}/bin
 BUILD = ${PWD}/build
 SHELL := /bin/bash
+FLAGS = -std=gnu99 -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
 all: ${BIN}/boot.bin ${BIN}/kernel.bin
 	rm -rf ${BIN}/os.bin
@@ -10,17 +11,17 @@ all: ${BIN}/boot.bin ${BIN}/kernel.bin
 	dd if=${BIN}/kernel.bin >> ${BIN}/os.bin
 	dd if=/dev/zero bs=512 count=100 >> ${BIN}/os.bin
 
-${BIN}/kernel.bin:  ${BUILD}/kernel.o
+${BIN}/kernel.bin:  ${BUILD}/kernel.o ${BUILD}/kernel_main.o
 	# Link all object files together in one file.
-	${TARGET}-ld -g -relocatable ${BUILD}/kernel.o -o ${BUILD}/kernelfull.o
+	${TARGET}-ld -g -relocatable ${BUILD}/kernel.o ${BUILD}/kernel_main.o -o ${BUILD}/kernelfull.o
 	# Take the object file and create an executable binary file.
-	${TARGET}-gcc -T ${SRC}/linker.ld -o ${BIN}/kernel.bin -ffreestanding -O0 -nostdlib ${BUILD}/kernelfull.o
+	${TARGET}-gcc $(FLAGS) -T ${SRC}/linker.ld -o ${BIN}/kernel.bin ${BUILD}/kernelfull.o
 
 ${BUILD}/kernel.o: ${SRC}/kernel.asm
-	nasm -i ${SRC}/ -f elf ${SRC}/gdt.asm -g -o ${BUILD}/gdt.o
-	nasm -i ${SRC}/ -f elf ${SRC}/kernel.asm -g -o ${BUILD}/kernel_part.o
-	${TARGET}-ld -g -relocatable ${BUILD}/gdt.o ${BUILD}/kernel_part.o -o ${BUILD}/kernel.o
+	nasm -i ${SRC}/ -f elf ${SRC}/kernel.asm -g -o ${BUILD}/kernel.o
 
+${BUILD}/kernel_main.o: ${SRC}/kernel.c
+	${TARGET}-gcc -I ${SRC} $(FLAGS) -c ${SRC}/kernel.c -o ${BUILD}/kernel_main.o
 
 ${BIN}/boot.bin: ${SRC}/boot.asm
 	nasm -i ${SRC}/ -f bin ${SRC}/boot.asm -g -o ${BIN}/boot.bin
@@ -31,7 +32,7 @@ ${BIN}/boot.bin: ${SRC}/boot.asm
 gcc_init:
 	source ${UTILITIES}/gcc_cross_compiler.sh
 test:
-	qemu-system-x86_64 -hda ${BIN}/boot.bin
+	qemu-system-x86_64 -hda ${BIN}/os.bin
 clean:
 	rm -rf ${BIN}/*
 	rm -rf ${BUILD}/*
