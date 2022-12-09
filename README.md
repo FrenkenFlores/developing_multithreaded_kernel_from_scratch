@@ -32,3 +32,5 @@
 - [GNU ld manual](https://sourceware.org/binutils/docs/ld/)
 - [Parallel ATA](https://en.wikipedia.org/wiki/Parallel_ATA)
 - [ATA PIO MODE](https://wiki.osdev.org/ATA_PIO_Mode)
+- [OS Development Series](http://www.brokenthorn.com/Resources/)
+- [VGA. Display, etc](http://www.brokenthorn.com/Resources/OSDev10.html)
