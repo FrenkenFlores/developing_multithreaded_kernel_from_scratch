@@ -11,20 +11,20 @@ all: ${BIN}/boot.bin ${BIN}/kernel.bin
 	dd if=${BIN}/kernel.bin >> ${BIN}/os.bin
 	dd if=/dev/zero bs=512 count=100 >> ${BIN}/os.bin
 
-${BIN}/kernel.bin:  ${BUILD}/kernel.o ${BUILD}/kernel_main.o
+${BIN}/kernel.bin:  ${BUILD}/kernel.asm.o ${BUILD}/kernel.o
 	# Link all object files together in one file.
-	${TARGET}-ld -g -relocatable ${BUILD}/kernel.o ${BUILD}/kernel_main.o -o ${BUILD}/kernelfull.o
+	${TARGET}-ld -g -relocatable ${BUILD}/kernel.asm.o ${BUILD}/kernel.o -o ${BUILD}/kernelfull.o
 	# Take the object file and create an executable binary file.
 	${TARGET}-gcc $(FLAGS) -T ${SRC}/linker.ld -o ${BIN}/kernel.bin ${BUILD}/kernelfull.o
 
-${BUILD}/kernel.o: ${SRC}/kernel.asm
-	nasm -i ${SRC}/ -f elf ${SRC}/kernel.asm -g -o ${BUILD}/kernel.o
+${BUILD}/kernel.asm.o: ${SRC}/kernel/kernel.asm
+	nasm -i ${SRC}/kernel -f elf ${SRC}/kernel/kernel.asm -g -o ${BUILD}/kernel.asm.o
 
-${BUILD}/kernel_main.o: ${SRC}/kernel.c
-	${TARGET}-gcc -I ${SRC} $(FLAGS) -c ${SRC}/kernel.c -o ${BUILD}/kernel_main.o
+${BUILD}/kernel.o: ${SRC}/kernel/kernel.c
+	${TARGET}-gcc -I ${SRC}/kernel $(FLAGS) -c ${SRC}/kernel/kernel.c -o ${BUILD}/kernel.o
 
-${BIN}/boot.bin: ${SRC}/boot.asm
-	nasm -i ${SRC}/ -f bin ${SRC}/boot.asm -g -o ${BIN}/boot.bin
+${BIN}/boot.bin: ${SRC}/boot/boot.asm
+	nasm -i ${SRC}/boot/ -f bin ${SRC}/boot/boot.asm -g -o ${BIN}/boot.bin
 
 # This command will install GCC-Cross compiler.
 # If it's already installed then it will add tools path to PATH
